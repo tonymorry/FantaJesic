@@ -78,7 +78,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ dbStatus, onAuthenticate
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-[#F8F9FA] flex flex-col lg:flex-row overflow-x-clip">
       {/* Compact Mobile Hero Header / Desktop Split Hero */}
       <div className="relative lg:w-[46%] bg-[#111318] text-white overflow-hidden flex flex-col justify-between px-5 py-6 sm:p-10 lg:p-12 min-h-[138px] lg:min-h-screen">
         <img

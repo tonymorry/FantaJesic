@@ -323,7 +323,6 @@ export const FeedView: React.FC<FeedViewProps> = ({
                 <Avatar src={currentUser.avatarUrl} name={currentUser.fullName} size="md" />
                 <textarea
                   rows={4}
-                  autoFocus
                   value={caption}
                   onChange={(e) => setCaption(e.target.value)}
                   placeholder="Scrivi qualcosa per gli associati JESic..."

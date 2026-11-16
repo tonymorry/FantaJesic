@@ -7,14 +7,20 @@
 }
 
 @layer base {
-  html,
-  body {
+  html {
+    height: auto;
     font-family: var(--font-sans);
     background-color: #F8F9FA;
     color: #111318;
     -webkit-tap-highlight-color: transparent;
-    overscroll-behavior-y: contain;
-    overflow-x: hidden;
+  }
+
+  body {
+    min-height: 100%;
+    margin: 0;
+    font-family: var(--font-sans);
+    background-color: #F8F9FA;
+    color: #111318;
   }
 
   h1, h2, h3, .font-display {
@@ -48,19 +54,4 @@
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
-}
-
-/* Custom thin scrollbar */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(17, 19, 24, 0.14);
-  border-radius: 9999px;
 }

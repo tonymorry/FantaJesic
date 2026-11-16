@@ -43,8 +43,12 @@ export default function App() {
         user: UserProfile;
         unreadNotifications: number;
       }>('/auth/me');
-      setUser(me.user);
-      setUnreadNotifications(me.unreadNotifications || 0);
+      setUser((prev) =>
+        prev && JSON.stringify(prev) === JSON.stringify(me.user) ? prev : me.user
+      );
+      setUnreadNotifications((prev) =>
+        prev === (me.unreadNotifications || 0) ? prev : me.unreadNotifications || 0
+      );
     } catch {
       const health = await fetch('/api/health')
         .then((r) => r.json())
@@ -98,19 +102,19 @@ export default function App() {
     } else {
       setSelectedProfileId(null);
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   };
 
   const handleOpenProfile = (userId: string) => {
     setSelectedProfileId(userId);
     setActiveTab('profile');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   };
 
   const handleOpenChallenge = (challengeId: string) => {
     setSelectedChallengeId(challengeId);
     setActiveTab('challenges');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   };
 
   const handleLogout = () => {
@@ -152,10 +156,10 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-[#111318] pb-24">
-      {/* Smartphone-First Sticky Top App Bar (52px) */}
-      <header className="sticky top-0 z-40 h-[54px] pt-safe bg-white/95 backdrop-blur-md border-b border-[#E6E8EC]">
-        <div className="max-w-2xl mx-auto h-full px-3.5 flex items-center justify-between gap-3">
+    <div className="min-h-screen bg-[#F8F9FA] text-[#111318] pb-24 overflow-x-clip">
+      {/* Smartphone-First Sticky Top App Bar */}
+      <header className="sticky top-0 z-40 min-h-[54px] pt-safe bg-white/95 backdrop-blur-md border-b border-[#E6E8EC]">
+        <div className="max-w-2xl mx-auto h-[54px] px-3.5 flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={() => handleNavigate('feed')}
