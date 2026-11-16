@@ -42,22 +42,22 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ onOpenProfile 
     loadData();
   }, []);
 
-  const top3 = standings.slice(0, 3);
-  // Podium display order on desktop: #2, #1, #3
-  const podiumOrder = [top3[1], top3[0], top3[2]].filter(Boolean);
+  const first = standings[0];
+  const second = standings[1];
+  const third = standings[2];
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-2xl mx-auto space-y-5">
       {/* Header & Season Selector */}
-      <div className="bg-white rounded-2xl border border-[#E6E8EC] p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl border border-[#E6E8EC] p-4 sm:p-5 space-y-3">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-[#5A6170]">
-            <Calendar className="w-4 h-4 text-[#E12D27]" />
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-[#5A6170]">
+            <Calendar className="w-3.5 h-3.5 text-[#E12D27]" />
             <span>
               {currentSeason?.status === 'archived' ? 'Stagione Archiviata' : 'Stagione Attiva'}
             </span>
           </div>
-          <h1 className="font-display text-2xl sm:text-3xl font-bold text-[#111318] mt-1">
+          <h1 className="font-display text-2xl font-bold text-[#111318] mt-0.5">
             Classifica {currentSeason?.name || 'FantaJESic'}
           </h1>
         </div>
@@ -66,7 +66,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ onOpenProfile 
           <select
             value={selectedSeasonId}
             onChange={(e) => loadData(e.target.value)}
-            className="h-11 px-4 rounded-xl bg-[#F8F9FA] border border-[#D8DCE3] text-sm font-semibold text-[#111318] focus:outline-none focus:border-[#E12D27]"
+            className="w-full h-12 px-3.5 rounded-xl bg-[#F8F9FA] border border-[#D8DCE3] text-base font-semibold text-[#111318] focus:outline-none focus:border-[#E12D27]"
           >
             {seasons.map((s) => (
               <option key={s._id} value={s._id}>
@@ -81,82 +81,82 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ onOpenProfile 
         <div className="h-64 bg-white rounded-2xl border border-[#E6E8EC] animate-pulse" />
       ) : (
         <>
-          {/* Top 3 Championship Podium */}
-          {podiumOrder.length > 0 && (
-            <section className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-              {podiumOrder.map((entry) => {
-                const isFirst = entry.rank === 1;
-                const isSecond = entry.rank === 2;
-                return (
-                  <button
-                    key={entry.userId}
-                    type="button"
-                    onClick={() => onOpenProfile(entry.userId)}
-                    className={`text-left rounded-2xl border p-6 transition-all cursor-pointer ${
-                      isFirst
-                        ? 'bg-[#111318] text-white border-[#C89B3C] md:order-2 md:pb-9'
-                        : isSecond
-                        ? 'bg-white text-[#111318] border-[#D8DCE3] md:order-1'
-                        : 'bg-white text-[#111318] border-[#E6E8EC] md:order-3'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <span
-                        className={`font-mono text-sm font-bold px-2.5 py-1 rounded-lg ${
-                          isFirst
-                            ? 'bg-[#C89B3C] text-black'
-                            : isSecond
-                            ? 'bg-[#ECEEF2] text-[#333945]'
-                            : 'bg-[#FEF3C7] text-[#92400E]'
-                        }`}
-                      >
-                        #{entry.rank}
-                      </span>
-                      {isFirst ? (
-                        <Trophy className="w-6 h-6 text-[#C89B3C]" />
-                      ) : (
-                        <Medal
-                          className={`w-5 h-5 ${isSecond ? 'text-[#64748B]' : 'text-[#B45309]'}`}
-                        />
-                      )}
+          {/* Smartphone-Native Top 3 Podium (#1 Featured + #2/#3 Grid) */}
+          {first && (
+            <section className="space-y-3">
+              <button
+                type="button"
+                onClick={() => onOpenProfile(first.userId)}
+                className="w-full text-left rounded-2xl bg-[#111318] text-white border border-[#C89B3C] p-5 flex items-center justify-between gap-4 active:scale-[0.99] transition-transform cursor-pointer"
+              >
+                <div className="flex items-center gap-3.5 min-w-0">
+                  <div className="relative shrink-0">
+                    <Avatar src={first.avatarUrl} name={first.fullName} size="lg" />
+                    <span className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#C89B3C] text-black font-mono text-xs font-bold flex items-center justify-center">
+                      1
+                    </span>
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-[#E5B85C]">
+                      <Trophy className="w-3.5 h-3.5" />
+                      <span>1° Posto</span>
                     </div>
+                    <div className="font-display text-lg font-bold truncate mt-0.5">
+                      {first.fullName}
+                    </div>
+                    <div className="text-xs text-white/70 truncate">{first.area}</div>
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <div className="font-mono text-2xl font-bold text-[#E5B85C] tabular-nums">
+                    {first.points}
+                  </div>
+                  <div className="text-[11px] text-white/60">punti</div>
+                </div>
+              </button>
 
-                    <div className="flex items-center gap-3.5">
-                      <Avatar src={entry.avatarUrl} name={entry.fullName} size="lg" />
-                      <div className="min-w-0">
-                        <div className="font-display text-lg font-bold truncate">
-                          {entry.fullName}
-                        </div>
-                        <div
-                          className={`text-xs truncate ${
-                            isFirst ? 'text-white/70' : 'text-[#5A6170]'
+              {(second || third) && (
+                <div className="grid grid-cols-2 gap-3">
+                  {[second, third].filter(Boolean).map((entry) => (
+                    <button
+                      key={entry.userId}
+                      type="button"
+                      onClick={() => onOpenProfile(entry.userId)}
+                      className="text-left rounded-2xl bg-white border border-[#E6E8EC] p-4 space-y-3 active:scale-[0.99] transition-transform cursor-pointer"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-lg bg-[#ECEEF2] text-[#111318]">
+                          #{entry.rank}
+                        </span>
+                        <Medal
+                          className={`w-4 h-4 ${
+                            entry.rank === 2 ? 'text-[#64748B]' : 'text-[#B45309]'
                           }`}
-                        >
-                          {entry.area}
+                        />
+                      </div>
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <Avatar src={entry.avatarUrl} name={entry.fullName} size="sm" />
+                        <div className="min-w-0">
+                          <div className="text-sm font-bold text-[#111318] truncate">
+                            {entry.fullName}
+                          </div>
+                          <div className="text-[11px] text-[#5A6170] truncate">{entry.area}</div>
                         </div>
                       </div>
-                    </div>
-
-                    <div className="mt-5 pt-4 border-t border-current/10 flex items-baseline justify-between">
-                      <span
-                        className={`text-xs ${isFirst ? 'text-white/65' : 'text-[#5A6170]'}`}
-                      >
-                        Punteggio totale
-                      </span>
-                      <span className="font-mono text-2xl font-bold tabular-nums">
-                        {entry.points} <span className="text-xs font-normal">pt</span>
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
+                      <div className="pt-2 border-t border-[#F1F3F6] font-mono text-lg font-bold text-[#111318] tabular-nums">
+                        {entry.points} <span className="text-xs font-normal text-[#5A6170]">pt</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </section>
           )}
 
-          {/* Full Standings Table */}
+          {/* Full Standings List */}
           <section className="bg-white rounded-2xl border border-[#E6E8EC] overflow-hidden">
-            <div className="px-5 py-4 border-b border-[#ECEEF2] flex items-center justify-between">
-              <h2 className="font-display text-lg font-bold text-[#111318]">
+            <div className="px-4 py-3.5 border-b border-[#ECEEF2] flex items-center justify-between">
+              <h2 className="font-display text-base font-bold text-[#111318]">
                 Classifica Generale ({standings.length})
               </h2>
             </div>
@@ -172,11 +172,11 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ onOpenProfile 
                     key={entry.userId}
                     type="button"
                     onClick={() => onOpenProfile(entry.userId)}
-                    className="w-full px-5 py-3.5 flex items-center justify-between gap-4 hover:bg-[#F8F9FA] transition-colors text-left cursor-pointer"
+                    className="w-full min-h-[60px] px-4 py-3 flex items-center justify-between gap-3 active:bg-[#F8F9FA] text-left cursor-pointer"
                   >
-                    <div className="flex items-center gap-3.5 min-w-0">
+                    <div className="flex items-center gap-3 min-w-0">
                       <span
-                        className={`font-mono text-sm font-bold w-8 text-center tabular-nums shrink-0 ${
+                        className={`font-mono text-sm font-bold w-7 text-center tabular-nums shrink-0 ${
                           entry.rank === 1
                             ? 'text-[#C89B3C]'
                             : entry.rank <= 3
@@ -214,9 +214,9 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ onOpenProfile 
 
           {/* Points Ledger History */}
           <section className="bg-white rounded-2xl border border-[#E6E8EC] overflow-hidden">
-            <div className="px-5 py-4 border-b border-[#ECEEF2] flex items-center gap-2">
+            <div className="px-4 py-3.5 border-b border-[#ECEEF2] flex items-center gap-2">
               <History className="w-4 h-4 text-[#E12D27]" />
-              <h2 className="font-display text-lg font-bold text-[#111318]">
+              <h2 className="font-display text-base font-bold text-[#111318]">
                 Storico Operazioni Punti
               </h2>
             </div>
@@ -233,21 +233,21 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ onOpenProfile 
                   return (
                     <div
                       key={tx._id}
-                      className="px-5 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                      className="px-4 py-3.5 flex items-start justify-between gap-3"
                     >
                       <div className="min-w-0">
                         <div className="text-sm font-semibold text-[#111318]">
                           <button
                             type="button"
                             onClick={() => tx.recipientId?._id && onOpenProfile(tx.recipientId._id)}
-                            className="hover:text-[#E12D27] cursor-pointer"
+                            className="active:text-[#E12D27] cursor-pointer"
                           >
                             {recName}
                           </button>
-                          <span className="font-normal text-[#5A6170]"> — {tx.reason}</span>
                         </div>
-                        <div className="text-xs text-[#7D8594] mt-0.5">
-                          Assegnati da {presName} · {formatDateTime(tx.createdAt)}
+                        <p className="text-xs text-[#333945] mt-0.5">{tx.reason}</p>
+                        <div className="text-[11px] text-[#7D8594] mt-1">
+                          Da {presName} · {formatDateTime(tx.createdAt)}
                         </div>
                       </div>
                       <span

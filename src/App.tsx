@@ -46,7 +46,6 @@ export default function App() {
       setUser(me.user);
       setUnreadNotifications(me.unreadNotifications || 0);
     } catch {
-      // Only clear token if server explicitly rejected auth; keep graceful if DB unavailable
       const health = await fetch('/api/health')
         .then((r) => r.json())
         .catch(() => null);
@@ -153,63 +152,50 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-[#111318] pb-20 md:pb-10">
-      {/* Desktop 3-Zone Top Bar */}
-      <header className="hidden md:block sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E6E8EC]">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-8">
-          {/* Zone 1: Brand Wordmark */}
+    <div className="min-h-screen bg-[#F8F9FA] text-[#111318] pb-24">
+      {/* Smartphone-First Sticky Top App Bar (52px) */}
+      <header className="sticky top-0 z-40 h-[54px] pt-safe bg-white/95 backdrop-blur-md border-b border-[#E6E8EC]">
+        <div className="max-w-2xl mx-auto h-full px-3.5 flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={() => handleNavigate('feed')}
-            className="flex items-center gap-2.5 whitespace-nowrap shrink-0 cursor-pointer"
+            className="flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer min-h-[44px]"
           >
             <img
               src={logoImg}
               alt="FantaJESic"
               referrerPolicy="no-referrer"
-              className="w-9 h-9 rounded-lg object-cover border border-black/5"
+              className="w-8 h-8 rounded-lg object-cover border border-black/5"
             />
-            <span className="font-display text-xl font-bold tracking-tight text-[#111318]">
+            <span className="font-display text-lg font-bold tracking-tight text-[#111318]">
               FantaJESic
             </span>
           </button>
 
-          {/* Zone 2: Single-Line Navigation Links */}
-          <nav className="flex items-center gap-6">
-            {navItems.map((item) => {
-              const active = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => handleNavigate(item.id)}
-                  className={`py-2 text-sm font-semibold whitespace-nowrap shrink-0 border-b-2 transition-colors cursor-pointer ${
-                    active
-                      ? 'text-[#E12D27] border-[#E12D27]'
-                      : 'text-[#5A6170] border-transparent hover:text-[#111318]'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
-          </nav>
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                setActiveTab('feed');
+                setComposerFocusTrigger((c) => c + 1);
+              }}
+              className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-[#E12D27] active:bg-[#FFF0EF] cursor-pointer"
+              aria-label="Nuovo Post"
+            >
+              <Plus className="w-6 h-6" />
+            </button>
 
-          {/* Zone 3: Primary Action & Account */}
-          <div className="flex items-center gap-2.5 shrink-0">
             <button
               type="button"
               onClick={() => handleNavigate('notifications')}
-              className={`relative min-h-[42px] min-w-[42px] rounded-xl flex items-center justify-center transition-colors cursor-pointer ${
-                activeTab === 'notifications'
-                  ? 'bg-[#FFF0EF] text-[#E12D27]'
-                  : 'text-[#5A6170] hover:bg-[#F8F9FA] hover:text-[#111318]'
+              className={`relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl cursor-pointer ${
+                activeTab === 'notifications' ? 'text-[#E12D27]' : 'text-[#333945]'
               }`}
               aria-label="Notifiche"
             >
               <Bell className="w-5 h-5" />
               {unreadNotifications > 0 && (
-                <span className="absolute top-1.5 right-1.5 min-w-[17px] h-[17px] px-1 rounded-full bg-[#E12D27] text-white font-mono text-[10px] font-bold flex items-center justify-center">
+                <span className="absolute top-2 right-2 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E12D27] text-white font-mono text-[10px] font-bold flex items-center justify-center">
                   {unreadNotifications > 9 ? '9+' : unreadNotifications}
                 </span>
               )}
@@ -218,71 +204,17 @@ export default function App() {
             <button
               type="button"
               onClick={() => handleOpenProfile(user._id)}
-              className="min-h-[42px] px-2 rounded-xl hover:bg-[#F8F9FA] flex items-center gap-2 transition-colors cursor-pointer"
-              aria-label="Il tuo profilo"
+              className="min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+              aria-label="Profilo"
             >
               <Avatar src={user.avatarUrl} name={user.fullName} size="xs" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setActiveTab('feed');
-                setComposerFocusTrigger((c) => c + 1);
-              }}
-              className="min-h-[42px] px-4 rounded-xl bg-[#E12D27] hover:bg-[#C9231E] text-white text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap shrink-0 transition-colors cursor-pointer"
-            >
-              <Plus className="w-4 h-4" />
-              Nuovo Post
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Compact Top Bar (<= 54px) */}
-      <header className="md:hidden sticky top-0 z-40 h-[54px] bg-white/95 backdrop-blur-md border-b border-[#E6E8EC] px-4 flex items-center justify-between">
-        <button
-          type="button"
-          onClick={() => handleNavigate('feed')}
-          className="flex items-center gap-2 whitespace-nowrap shrink-0"
-        >
-          <img
-            src={logoImg}
-            alt="FantaJESic"
-            referrerPolicy="no-referrer"
-            className="w-8 h-8 rounded-lg object-cover border border-black/5"
-          />
-          <span className="font-display text-lg font-bold text-[#111318]">FantaJESic</span>
-        </button>
-
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={() => handleNavigate('notifications')}
-            className="relative min-h-[44px] min-w-[44px] flex items-center justify-center text-[#333945]"
-            aria-label="Notifiche"
-          >
-            <Bell className="w-5 h-5" />
-            {unreadNotifications > 0 && (
-              <span className="absolute top-2 right-2 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E12D27] text-white font-mono text-[10px] font-bold flex items-center justify-center">
-                {unreadNotifications > 9 ? '9+' : unreadNotifications}
-              </span>
-            )}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleOpenProfile(user._id)}
-            className="min-h-[44px] min-w-[44px] flex items-center justify-center"
-            aria-label="Profilo"
-          >
-            <Avatar src={user.avatarUrl} name={user.fullName} size="xs" />
-          </button>
-        </div>
-      </header>
-
-      {/* Main Content Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-7">
+      {/* Mobile-First Main Viewport */}
+      <main className="max-w-2xl mx-auto px-3.5 py-4">
         {activeTab === 'feed' && (
           <FeedView
             currentUser={user}
@@ -338,13 +270,13 @@ export default function App() {
         )}
       </main>
 
-      {/* Mobile Bottom Navigation Bar */}
+      {/* Fixed Thumb-Zone Bottom Tab Bar */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E6E8EC] pb-safe"
-        aria-label="Navigazione principale mobile"
+        className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E6E8EC] pb-safe"
+        aria-label="Navigazione principale"
       >
         <div
-          className={`grid h-16 items-center ${
+          className={`max-w-2xl mx-auto grid h-16 items-center ${
             isPresident ? 'grid-cols-5' : 'grid-cols-4'
           }`}
         >
@@ -356,7 +288,7 @@ export default function App() {
                 key={item.id}
                 type="button"
                 onClick={() => handleNavigate(item.id)}
-                className={`h-full min-h-[44px] flex flex-col items-center justify-center gap-0.5 transition-colors ${
+                className={`h-full min-h-[44px] flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer ${
                   active ? 'text-[#E12D27]' : 'text-[#5A6170]'
                 }`}
               >

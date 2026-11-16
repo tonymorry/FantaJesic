@@ -78,26 +78,21 @@ export const PostCard: React.FC<PostCardProps> = ({
 
   return (
     <article className="bg-white rounded-2xl border border-[#E6E8EC] overflow-hidden">
-      {/* Header */}
-      <div className="px-4 sm:px-5 pt-4 pb-3 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <Avatar
-            src={post.authorId?.avatarUrl}
-            name={authorName}
-            size="md"
-            onClick={() => onOpenProfile(post.authorId._id)}
-          />
+      {/* Author Header (44px+ tap area) */}
+      <div className="px-4 pt-3.5 pb-2.5 flex items-center justify-between gap-2">
+        <button
+          type="button"
+          onClick={() => onOpenProfile(post.authorId._id)}
+          className="flex items-center gap-3 min-w-0 min-h-[44px] text-left cursor-pointer"
+        >
+          <Avatar src={post.authorId?.avatarUrl} name={authorName} size="md" />
           <div className="min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <button
-                type="button"
-                onClick={() => onOpenProfile(post.authorId._id)}
-                className="font-semibold text-sm text-[#111318] hover:text-[#E12D27] transition-colors truncate cursor-pointer"
-              >
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="font-semibold text-[15px] text-[#111318] truncate">
                 {authorName}
-              </button>
+              </span>
               {post.authorId?.role === 'president' && (
-                <span className="text-[11px] font-semibold text-[#C89B3C]">Presidente</span>
+                <span className="text-[11px] font-bold text-[#C89B3C]">Presidente</span>
               )}
             </div>
             <div className="flex items-center gap-1.5 text-xs text-[#5A6170] truncate">
@@ -106,15 +101,14 @@ export const PostCard: React.FC<PostCardProps> = ({
               <span className="shrink-0">{formatRelativeDate(post.createdAt)}</span>
             </div>
           </div>
-        </div>
+        </button>
 
         {canDelete && (
           <button
             type="button"
             onClick={handleDelete}
             disabled={deleting}
-            className="min-h-[40px] min-w-[40px] flex items-center justify-center rounded-xl text-[#9AA1B0] hover:text-[#E12D27] hover:bg-[#F8F9FA] transition-colors cursor-pointer"
-            title="Elimina contenuto"
+            className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-[#9AA1B0] active:text-[#E12D27] cursor-pointer"
             aria-label="Elimina contenuto"
           >
             {deleting ? (
@@ -126,18 +120,18 @@ export const PostCard: React.FC<PostCardProps> = ({
         )}
       </div>
 
-      {/* Challenge Context Link (if linked to a challenge) */}
+      {/* Challenge Context Link */}
       {post.challengeId && (
-        <div className="px-4 sm:px-5 pb-3">
+        <div className="px-4 pb-3">
           <button
             type="button"
             onClick={() => onOpenChallenge?.(post.challengeId!._id)}
-            className="w-full text-left px-3.5 py-2.5 rounded-xl bg-[#FFF6F5] border border-[#F5D6D4] flex items-center justify-between gap-2 hover:bg-[#FFEDEB] transition-colors cursor-pointer"
+            className="w-full min-h-[44px] text-left px-3.5 py-2 rounded-xl bg-[#FFF6F5] border border-[#F5D6D4] flex items-center justify-between gap-2 active:bg-[#FFEDEB] cursor-pointer"
           >
             <div className="flex items-center gap-2 min-w-0">
               <Trophy className="w-4 h-4 text-[#E12D27] shrink-0" />
               <span className="text-xs font-semibold text-[#111318] truncate">
-                Contributo per la sfida: {post.challengeId.title}
+                Sfida: {post.challengeId.title}
               </span>
             </div>
             <ArrowUpRight className="w-4 h-4 text-[#E12D27] shrink-0" />
@@ -147,72 +141,70 @@ export const PostCard: React.FC<PostCardProps> = ({
 
       {/* Media Content */}
       {post.mediaUrl && post.mediaType === 'image' && (
-        <div className="bg-[#111318] max-h-[540px] overflow-hidden flex items-center justify-center">
+        <div className="bg-[#111318] max-h-[460px] overflow-hidden flex items-center justify-center">
           <img
             src={post.mediaUrl}
             alt={post.caption || `Foto di ${authorName}`}
             referrerPolicy="no-referrer"
-            className="w-full max-h-[540px] object-contain"
+            className="w-full max-h-[460px] object-cover"
           />
         </div>
       )}
 
       {post.mediaUrl && post.mediaType === 'video' && (
-        <div className="bg-[#111318] max-h-[540px] overflow-hidden">
+        <div className="bg-[#111318] max-h-[460px] overflow-hidden">
           <video
             src={post.mediaUrl}
             controls
             playsInline
             preload="metadata"
-            className="w-full max-h-[540px]"
+            className="w-full max-h-[460px]"
           />
         </div>
       )}
 
       {/* Caption & Actions */}
-      <div className="px-4 sm:px-5 py-3.5">
+      <div className="px-4 py-3">
         {post.caption && (
-          <p className="text-[15px] text-[#111318] leading-relaxed whitespace-pre-line mb-3">
+          <p className="text-[15px] text-[#111318] leading-relaxed whitespace-pre-line mb-2.5">
             {post.caption}
           </p>
         )}
 
-        <div className="flex items-center justify-between pt-1 border-t border-[#F1F3F6]">
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={handleLike}
-              disabled={liking}
-              className={`min-h-[44px] px-3 rounded-xl flex items-center gap-2 text-sm font-medium transition-colors cursor-pointer ${
-                isLiked
-                  ? 'text-[#E12D27] bg-[#FFF0EF]'
-                  : 'text-[#5A6170] hover:text-[#111318] hover:bg-[#F8F9FA]'
-              }`}
-            >
-              <Heart className={`w-5 h-5 ${isLiked ? 'fill-[#E12D27]' : ''}`} />
-              <span className="font-mono tabular-nums text-xs">{post.likes?.length || 0}</span>
-            </button>
+        <div className="flex items-center gap-2 pt-1.5 border-t border-[#F1F3F6]">
+          <button
+            type="button"
+            onClick={handleLike}
+            disabled={liking}
+            className={`min-h-[44px] px-3.5 rounded-xl flex items-center gap-2 text-sm font-semibold active:scale-95 transition-transform cursor-pointer ${
+              isLiked
+                ? 'text-[#E12D27] bg-[#FFF0EF]'
+                : 'text-[#5A6170] active:bg-[#F8F9FA]'
+            }`}
+          >
+            <Heart className={`w-5 h-5 ${isLiked ? 'fill-[#E12D27]' : ''}`} />
+            <span className="font-mono tabular-nums text-xs">{post.likes?.length || 0}</span>
+          </button>
 
-            <button
-              type="button"
-              onClick={() => setShowComments((s) => !s)}
-              className="min-h-[44px] px-3 rounded-xl flex items-center gap-2 text-sm font-medium text-[#5A6170] hover:text-[#111318] hover:bg-[#F8F9FA] transition-colors cursor-pointer"
-            >
-              <MessageCircle className="w-5 h-5" />
-              <span className="font-mono tabular-nums text-xs">
-                {post.comments?.length || 0}
-              </span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setShowComments((s) => !s)}
+            className="min-h-[44px] px-3.5 rounded-xl flex items-center gap-2 text-sm font-semibold text-[#5A6170] active:bg-[#F8F9FA] cursor-pointer"
+          >
+            <MessageCircle className="w-5 h-5" />
+            <span className="font-mono tabular-nums text-xs">
+              {post.comments?.length || 0}
+            </span>
+          </button>
         </div>
 
-        {/* Comments Drawer */}
+        {/* Comments Section */}
         {(showComments || (post.comments?.length || 0) > 0) && (
-          <div className="mt-3 pt-3 border-t border-[#F1F3F6] space-y-2.5">
+          <div className="mt-2.5 pt-2.5 border-t border-[#F1F3F6] space-y-2.5">
             {(showComments ? post.comments : post.comments.slice(-2)).map((c) => {
               const cName = `${c.authorId?.firstName || ''} ${c.authorId?.lastName || ''}`.trim();
               return (
-                <div key={c._id} className="flex items-start gap-2.5 text-sm">
+                <div key={c._id} className="flex items-start gap-2.5">
                   <Avatar
                     src={c.authorId?.avatarUrl}
                     name={cName}
@@ -224,7 +216,7 @@ export const PostCard: React.FC<PostCardProps> = ({
                       <button
                         type="button"
                         onClick={() => c.authorId?._id && onOpenProfile(c.authorId._id)}
-                        className="font-semibold text-xs text-[#111318] hover:text-[#E12D27] cursor-pointer"
+                        className="font-semibold text-xs text-[#111318] cursor-pointer"
                       >
                         {cName}
                       </button>
@@ -232,7 +224,7 @@ export const PostCard: React.FC<PostCardProps> = ({
                         {formatRelativeDate(c.createdAt)}
                       </span>
                     </div>
-                    <p className="text-xs sm:text-sm text-[#333945] mt-0.5 break-words">{c.text}</p>
+                    <p className="text-sm text-[#333945] mt-0.5 break-words">{c.text}</p>
                   </div>
                 </div>
               );
@@ -242,9 +234,9 @@ export const PostCard: React.FC<PostCardProps> = ({
               <button
                 type="button"
                 onClick={() => setShowComments(true)}
-                className="text-xs font-semibold text-[#5A6170] hover:text-[#111318] py-1 cursor-pointer"
+                className="min-h-[36px] text-xs font-semibold text-[#5A6170] py-1 cursor-pointer"
               >
-                Mostra tutti i {post.comments.length} commenti
+                Vedi tutti i {post.comments.length} commenti
               </button>
             )}
 
@@ -254,12 +246,12 @@ export const PostCard: React.FC<PostCardProps> = ({
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 placeholder="Scrivi un commento..."
-                className="flex-1 h-10 px-3.5 rounded-xl bg-[#F8F9FA] border border-[#E6E8EC] text-sm focus:outline-none focus:border-[#E12D27] focus:bg-white"
+                className="flex-1 h-11 px-3.5 rounded-xl bg-[#F8F9FA] border border-[#E6E8EC] text-base focus:outline-none focus:border-[#E12D27] focus:bg-white"
               />
               <button
                 type="submit"
                 disabled={!commentText.trim() || submittingComment}
-                className="min-h-[40px] min-w-[40px] px-3 rounded-xl bg-[#111318] text-white flex items-center justify-center hover:bg-[#E12D27] transition-colors disabled:opacity-40 cursor-pointer"
+                className="min-h-[44px] min-w-[44px] rounded-xl bg-[#111318] text-white flex items-center justify-center active:bg-[#E12D27] disabled:opacity-40 cursor-pointer"
                 aria-label="Invia commento"
               >
                 {submittingComment ? (

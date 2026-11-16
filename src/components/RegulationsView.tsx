@@ -54,7 +54,7 @@ export const RegulationsView: React.FC<RegulationsViewProps> = ({ currentUser })
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto space-y-4">
+      <div className="max-w-2xl mx-auto space-y-4">
         <div className="h-24 bg-white rounded-2xl border border-[#E6E8EC] animate-pulse" />
         <div className="h-64 bg-white rounded-2xl border border-[#E6E8EC] animate-pulse" />
       </div>
@@ -62,9 +62,9 @@ export const RegulationsView: React.FC<RegulationsViewProps> = ({ currentUser })
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-white rounded-2xl border border-[#E6E8EC] p-6 sm:p-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#ECEEF2]">
+    <div className="max-w-2xl mx-auto">
+      <div className="bg-white rounded-2xl border border-[#E6E8EC] p-5 space-y-5">
+        <div className="flex flex-col gap-3 pb-4 border-b border-[#ECEEF2]">
           <div>
             <div className="flex items-center gap-2 text-xs font-medium text-[#5A6170]">
               <BookOpen className="w-4 h-4 text-[#E12D27]" />
@@ -72,11 +72,11 @@ export const RegulationsView: React.FC<RegulationsViewProps> = ({ currentUser })
               {regulation?.updatedAt && (
                 <>
                   <span aria-hidden="true">·</span>
-                  <span>Aggiornato il {formatDateTime(regulation.updatedAt)}</span>
+                  <span>{formatDateTime(regulation.updatedAt)}</span>
                 </>
               )}
             </div>
-            <h1 className="font-display text-2xl sm:text-3xl font-bold text-[#111318] mt-1.5">
+            <h1 className="font-display text-2xl font-bold text-[#111318] mt-1">
               {regulation?.title || 'Regolamento FantaJESic'}
             </h1>
           </div>
@@ -84,7 +84,7 @@ export const RegulationsView: React.FC<RegulationsViewProps> = ({ currentUser })
           {currentUser.role === 'president' && !editing && (
             <button
               onClick={() => setEditing(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl bg-[#111318] text-white text-sm font-medium hover:bg-[#232730] transition-colors shrink-0 cursor-pointer"
+              className="w-full inline-flex items-center justify-center gap-2 px-4 min-h-[44px] rounded-xl bg-[#111318] text-white text-sm font-semibold cursor-pointer"
             >
               <Edit3 className="w-4 h-4" />
               Modifica Regolamento
@@ -93,16 +93,16 @@ export const RegulationsView: React.FC<RegulationsViewProps> = ({ currentUser })
         </div>
 
         {savedNotice && (
-          <div className="mt-5 rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-800 flex items-center gap-2">
+          <div className="rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-800 flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
-            <span>Regolamento salvato e pubblicato con successo.</span>
+            <span>Regolamento salvato con successo.</span>
           </div>
         )}
 
         {editing ? (
-          <form onSubmit={handleSave} className="mt-6 space-y-6">
+          <form onSubmit={handleSave} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-[#333945] mb-1.5">
+              <label className="block text-xs font-semibold text-[#333945] mb-1">
                 Titolo Regolamento
               </label>
               <input
@@ -110,17 +110,17 @@ export const RegulationsView: React.FC<RegulationsViewProps> = ({ currentUser })
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full h-11 px-3.5 rounded-xl border border-[#D8DCE3] text-sm focus:outline-none focus:border-[#E12D27]"
+                className="w-full h-12 px-3.5 rounded-xl border border-[#D8DCE3] text-base focus:outline-none focus:border-[#E12D27]"
               />
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3.5">
               {sections.map((sec, idx) => (
                 <div
                   key={sec.id || idx}
-                  className="p-4 rounded-xl bg-[#F8F9FA] border border-[#E6E8EC] space-y-3"
+                  className="p-3.5 rounded-xl bg-[#F8F9FA] border border-[#E6E8EC] space-y-2.5"
                 >
-                  <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center justify-between gap-2">
                     <input
                       type="text"
                       required
@@ -131,12 +131,12 @@ export const RegulationsView: React.FC<RegulationsViewProps> = ({ currentUser })
                         setSections(copy);
                       }}
                       placeholder="Titolo sezione"
-                      className="flex-1 h-10 px-3 rounded-lg bg-white border border-[#D8DCE3] text-sm font-semibold focus:outline-none focus:border-[#E12D27]"
+                      className="flex-1 h-11 px-3 rounded-lg bg-white border border-[#D8DCE3] text-base font-semibold focus:outline-none focus:border-[#E12D27]"
                     />
                     <button
                       type="button"
                       onClick={() => setSections(sections.filter((_, i) => i !== idx))}
-                      className="min-h-[40px] min-w-[40px] flex items-center justify-center rounded-lg text-[#5A6170] hover:text-[#E12D27] hover:bg-white transition-colors"
+                      className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-[#5A6170] active:text-[#E12D27]"
                       aria-label="Rimuovi sezione"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -152,56 +152,54 @@ export const RegulationsView: React.FC<RegulationsViewProps> = ({ currentUser })
                       setSections(copy);
                     }}
                     placeholder="Testo della regola..."
-                    className="w-full p-3 rounded-lg bg-white border border-[#D8DCE3] text-sm leading-relaxed focus:outline-none focus:border-[#E12D27]"
+                    className="w-full p-3 rounded-lg bg-white border border-[#D8DCE3] text-base leading-relaxed focus:outline-none focus:border-[#E12D27]"
                   />
                 </div>
               ))}
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() =>
+                setSections([
+                  ...sections,
+                  { id: `sec-${Date.now()}`, heading: `${sections.length + 1}. Nuova Sezione`, content: '' },
+                ])
+              }
+              className="w-full inline-flex items-center justify-center gap-2 px-4 min-h-[46px] rounded-xl border border-[#D8DCE3] bg-white text-sm font-semibold text-[#111318]"
+            >
+              <Plus className="w-4 h-4" />
+              Aggiungi Sezione
+            </button>
+
+            <div className="grid grid-cols-2 gap-2.5 pt-1">
               <button
                 type="button"
-                onClick={() =>
-                  setSections([
-                    ...sections,
-                    { id: `sec-${Date.now()}`, heading: `${sections.length + 1}. Nuova Sezione`, content: '' },
-                  ])
-                }
-                className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl border border-[#D8DCE3] bg-white text-sm font-medium text-[#111318] hover:bg-[#F8F9FA]"
+                onClick={() => {
+                  setEditing(false);
+                  setTitle(regulation?.title || '');
+                  setSections(regulation?.sections || []);
+                }}
+                className="min-h-[46px] rounded-xl border border-[#E6E8EC] text-sm font-semibold text-[#5A6170]"
               >
-                <Plus className="w-4 h-4" />
-                Aggiungi Sezione
+                Annulla
               </button>
-
-              <div className="flex items-center gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEditing(false);
-                    setTitle(regulation?.title || '');
-                    setSections(regulation?.sections || []);
-                  }}
-                  className="px-4 py-2.5 min-h-[44px] rounded-xl text-sm font-medium text-[#5A6170] hover:bg-[#F8F9FA]"
-                >
-                  Annulla
-                </button>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl bg-[#E12D27] text-white text-sm font-semibold hover:bg-[#C9231E] disabled:opacity-60"
-                >
-                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                  Salva Modifiche
-                </button>
-              </div>
+              <button
+                type="submit"
+                disabled={saving}
+                className="inline-flex items-center justify-center gap-2 min-h-[46px] rounded-xl bg-[#E12D27] text-white text-sm font-semibold disabled:opacity-60"
+              >
+                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                Salva
+              </button>
             </div>
           </form>
         ) : (
-          <div className="mt-6 divide-y divide-[#ECEEF2]">
+          <div className="divide-y divide-[#ECEEF2]">
             {regulation?.sections?.map((sec) => (
-              <section key={sec.id} className="py-5 first:pt-0 last:pb-0">
+              <section key={sec.id} className="py-4 first:pt-0 last:pb-0">
                 <h2 className="font-display text-lg font-bold text-[#111318]">{sec.heading}</h2>
-                <p className="mt-2 text-[15px] text-[#333945] leading-relaxed whitespace-pre-line">
+                <p className="mt-1.5 text-[15px] text-[#333945] leading-relaxed whitespace-pre-line">
                   {sec.content}
                 </p>
               </section>

@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import apiRouter from './server/routes';
@@ -23,6 +24,9 @@ async function startServer() {
 
   // API routes
   app.use('/api', apiRouter);
+  app.use('/api/*', (_req, res) => {
+    res.status(404).json({ error: 'Endpoint API non trovato.' });
+  });
 
   if (!isProd) {
     const { createServer: createViteServer } = await import('vite');
@@ -32,10 +36,13 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(__dirname, 'dist');
-    const resolvedDist = distPath.endsWith('dist-server/dist')
-      ? path.join(__dirname, '..', 'dist')
-      : distPath;
+    const parentDist = path.resolve(__dirname, '..', 'dist');
+    const localDist = path.resolve(__dirname, 'dist');
+    const resolvedDist = fs.existsSync(parentDist)
+      ? parentDist
+      : fs.existsSync(localDist)
+      ? localDist
+      : path.resolve(process.cwd(), 'dist');
 
     app.use(express.static(resolvedDist));
     app.get('*', (_req, res) => {
