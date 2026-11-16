@@ -1,0 +1,6 @@
+{
+  "name": "FantaJESic",
+  "description": "Piattaforma social e competitiva dedicata agli associati JESic: sfide, punti, classifiche, votazioni, stagioni e community.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
