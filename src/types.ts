@@ -223,11 +223,7 @@ export type AppTab =
 
 export const JESIC_AREAS = [
   'Board',
-  'Marketing & Communication',
-  'IT & Innovation',
-  'Sales & Business Development',
-  'HR & People',
-  'Legal & Finance',
-  'Audit & Quality',
-  'International',
+  'Sales, Legal e Public Affairs',
+  'HR e Audit',
+  'Marketing e IT',
 ] as const;
